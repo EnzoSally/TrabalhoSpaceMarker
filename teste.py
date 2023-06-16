@@ -103,6 +103,7 @@ while running:
         bola.draw_name()
         bola.draw()
 
+    # Renderizar o hub com as instruções
     texto_hub = fonte_hub.render("Pressione F10 para salvar as marcações", True, (0, 0, 0))
     tela.blit(texto_hub, (10, 10))
     texto_hub = fonte_hub.render("Pressione F11 para carregar as marcações", True, (0, 0, 0))
