@@ -1,4 +1,5 @@
 import pygame
+import winsound
 import tkinter as tk
 from tkinter import simpledialog
 
@@ -10,6 +11,9 @@ vermelho = (255, 0, 0)
 largura_tela, altura_tela = 800, 600
 tela = pygame.display.set_mode((largura_tela, altura_tela))
 pygame.display.set_caption("Criando Bolas")
+pygame.mixer.music.load("SomNave.mp3")
+pygame.mixer.music.play(-1)
+
 
 bolas = []
 
