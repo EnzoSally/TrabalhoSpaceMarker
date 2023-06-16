@@ -2,6 +2,7 @@ import pygame
 import tkinter as tk
 from tkinter import simpledialog
 import pickle
+import sys
 
 pygame.init()
 
@@ -80,7 +81,10 @@ bola_anterior = None
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            # Salvar os pontos marcados antes de fechar a aplicação
+            salvar_marcações()
+            pygame.quit()
+            sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 x, y = event.pos
@@ -90,16 +94,17 @@ while running:
                 bola.definir_nome()
                 bolas.append(bola)
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                for bola in bolas:
-                    if not bola.nome:
-                        bola.nome = f"DESCONHECIDO ({bola.x}, {bola.y})"
-            elif event.key == pygame.K_F10:
+            if event.key == pygame.K_F10:
                 salvar_marcações()
             elif event.key == pygame.K_F11:
                 carregar_marcações()
             elif event.key == pygame.K_F12:
                 excluir_todas_marcações()
+            elif event.key == pygame.K_ESCAPE:
+                # Salvar os pontos marcados antes de fechar a aplicação
+                salvar_marcações()
+                pygame.quit()
+                sys.exit()
 
     tela.fill(branco)
     tela.blit(fundo, (0, 0))
