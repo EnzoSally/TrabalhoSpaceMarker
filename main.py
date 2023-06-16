@@ -45,9 +45,12 @@ class Ball:
         tela.blit(texto, texto_rect)
 
 def salvar_marcações():
-    with open("marcacoes.pkl", "wb") as file:
-        pickle.dump(bolas, file)
-    print("Marcações salvas com sucesso!")
+    try:
+        with open("marcacoes.pkl", "wb") as file:
+            pickle.dump(bolas, file)
+        print("Marcações salvas com sucesso!")
+    except Exception as e:
+        print("Erro ao salvar as marcações:", str(e))
 
 def carregar_marcações():
     try:
@@ -58,6 +61,8 @@ def carregar_marcações():
         print("Marcações carregadas com sucesso!")
     except FileNotFoundError:
         print("Arquivo de marcações não encontrado.")
+    except Exception as e:
+        print("Erro ao carregar as marcações:", str(e))
 
 def excluir_todas_marcações():
     bolas.clear()
@@ -103,6 +108,7 @@ while running:
         bola.draw_name()
         bola.draw()
 
+    # Renderizar o hub com as instruções
     texto_hub = fonte_hub.render("Pressione F10 para salvar as marcações", True, (0, 0, 0))
     tela.blit(texto_hub, (10, 10))
     texto_hub = fonte_hub.render("Pressione F11 para carregar as marcações", True, (0, 0, 0))
