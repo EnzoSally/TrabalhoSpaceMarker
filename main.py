@@ -13,8 +13,9 @@ tela = pygame.display.set_mode((largura_tela, altura_tela))
 pygame.display.set_caption("Criando Bolas")
 pygame.mixer.music.load("SomNave.mp3")
 pygame.mixer.music.play(-1)
-
-
+icon = pygame.image.load("nave.png")
+pygame.display.set_icon(icon)
+fundo = pygame.image.load("fundo.jpg")
 
 bolas = []
 
@@ -68,6 +69,7 @@ while running:
                         bola.nome = f"DESCONHECIDO ({bola.x}, {bola.y})"
 
     tela.fill(branco)
+    tela.blit(fundo, (0,0))
 
     for bola in bolas:
         bola.draw_name()
