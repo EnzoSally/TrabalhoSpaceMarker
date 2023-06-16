@@ -18,7 +18,7 @@ icon = pygame.image.load("nave.png")
 pygame.display.set_icon(icon)
 fundo = pygame.image.load("fundo.jpg")
 
-bolas = []
+marcacoes = {}
 
 class Ball:
     def __init__(self, x, y):
@@ -48,7 +48,7 @@ class Ball:
 def salvar_marcações():
     try:
         with open("marcacoes.pkl", "wb") as file:
-            pickle.dump(bolas, file)
+            pickle.dump(marcacoes, file)
         print("Marcações salvas com sucesso!")
     except Exception as e:
         print("Erro ao salvar as marcações:", str(e))
@@ -56,9 +56,9 @@ def salvar_marcações():
 def carregar_marcações():
     try:
         with open("marcacoes.pkl", "rb") as file:
-            bolas_carregadas = pickle.load(file)
-        bolas.clear()
-        bolas.extend(bolas_carregadas)
+            marcacoes_carregadas = pickle.load(file)
+        marcacoes.clear()
+        marcacoes.update(marcacoes_carregadas)
         print("Marcações carregadas com sucesso!")
     except FileNotFoundError:
         print("Arquivo de marcações não encontrado.")
@@ -66,22 +66,23 @@ def carregar_marcações():
         print("Erro ao carregar as marcações:", str(e))
 
 def excluir_todas_marcações():
-    bolas.clear()
+    marcacoes.clear()
     print("Todas as marcações foram excluídas.")
+
+def mostrar_marcacoes():
+    for bola, nome in marcacoes.items():
+        print(f"Posição: ({bola.x}, {bola.y}) - Nome: {nome}")
 
 root = tk.Tk()
 root.withdraw()
 
-# Fonte para o hub
 fonte_hub = pygame.font.SysFont(None, 24)
 
-# Loop principal do jogo
 running = True
 bola_anterior = None
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            # Salvar os pontos marcados antes de fechar a aplicação
             salvar_marcações()
             pygame.quit()
             sys.exit()
@@ -92,7 +93,7 @@ while running:
                 bola.bola_anterior = bola_anterior
                 bola_anterior = bola
                 bola.definir_nome()
-                bolas.append(bola)
+                marcacoes[bola] = bola.nome
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_F10:
                 salvar_marcações()
@@ -100,8 +101,9 @@ while running:
                 carregar_marcações()
             elif event.key == pygame.K_F12:
                 excluir_todas_marcações()
+            elif event.key == pygame.K_F9:
+                mostrar_marcacoes()
             elif event.key == pygame.K_ESCAPE:
-                # Salvar os pontos marcados antes de fechar a aplicação
                 salvar_marcações()
                 pygame.quit()
                 sys.exit()
@@ -109,17 +111,20 @@ while running:
     tela.fill(branco)
     tela.blit(fundo, (0, 0))
 
-    for bola in bolas:
+    for bola, nome in marcacoes.items():
+        bola.nome = nome
         bola.draw_name()
         bola.draw()
-
-    # Renderizar o hub com as instruções
-    texto_hub = fonte_hub.render("Pressione F10 para salvar as marcações", True, (0, 0, 0))
+        
+    texto_hub = fonte_hub.render("Pressione F9 para mostrar as marcações", True, (0, 0, 0))
     tela.blit(texto_hub, (10, 10))
-    texto_hub = fonte_hub.render("Pressione F11 para carregar as marcações", True, (0, 0, 0))
+    texto_hub = fonte_hub.render("Pressione F10 para salvar as marcações", True, (0, 0, 0))
     tela.blit(texto_hub, (10, 40))
-    texto_hub = fonte_hub.render("Pressione F12 para excluir todas as marcações", True, (0, 0, 0))
+    texto_hub = fonte_hub.render("Pressione F11 para carregar as marcações", True, (0, 0, 0))
     tela.blit(texto_hub, (10, 70))
+    texto_hub = fonte_hub.render("Pressione F12 para excluir todas as marcações", True, (0, 0, 0))
+    tela.blit(texto_hub, (10, 100))
+
 
     pygame.display.flip()
 
