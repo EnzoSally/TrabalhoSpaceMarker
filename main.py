@@ -31,10 +31,21 @@ class Ball:
     def definir_nome(self):
         self.nome = simpledialog.askstring("Nome da Estrela", "Insira o nome da Estrela:")
 
+    def calcular_distancia(self, outra_bola):
+        distancia_x = abs(self.x - outra_bola.x)
+        distancia_y = abs(self.y - outra_bola.y)
+        soma_distancias = distancia_x + distancia_y
+        return soma_distancias
+
     def draw(self):
         pygame.draw.circle(tela, vermelho, (self.x, self.y), self.radius)
         if self.bola_anterior:
             pygame.draw.line(tela, vermelho, (self.x, self.y), (self.bola_anterior.x, self.bola_anterior.y), 1)
+            distancia = self.calcular_distancia(self.bola_anterior)
+            fonte = pygame.font.SysFont(None, 16)
+            texto = fonte.render(f"Soma Distância: {distancia}", True, (0, 0, 0))
+            texto_rect = texto.get_rect(center=((self.x + self.bola_anterior.x) // 2, (self.y + self.bola_anterior.y) // 2))
+            tela.blit(texto, texto_rect)
 
     def draw_name(self):
         fonte = pygame.font.SysFont(None, 20)
@@ -115,7 +126,7 @@ while running:
         bola.nome = nome
         bola.draw_name()
         bola.draw()
-        
+
     texto_hub = fonte_hub.render("Pressione F9 para mostrar as marcações", True, (0, 0, 0))
     tela.blit(texto_hub, (10, 10))
     texto_hub = fonte_hub.render("Pressione F10 para salvar as marcações", True, (0, 0, 0))
@@ -124,7 +135,6 @@ while running:
     tela.blit(texto_hub, (10, 70))
     texto_hub = fonte_hub.render("Pressione F12 para excluir todas as marcações", True, (0, 0, 0))
     tela.blit(texto_hub, (10, 100))
-
 
     pygame.display.flip()
 
